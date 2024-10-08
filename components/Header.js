@@ -1,8 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import styled from "styled-components";
+import { FiMenu } from 'react-icons/fi';
 
-export default function Header() {
+const Hamburger = styled(FiMenu)`
+  display: none;
+  cursor: pointer;
+  margin-left: 1rem;
+  font-size: 1.5rem;
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+
+export default function Header({ sidebarOpen, setSidebarOpen }) {
   return (
     <HeaderContainer>
       <LogoContainer>
@@ -25,6 +37,7 @@ export default function Header() {
         </Status>
         <HelpButton>Help</HelpButton>
         <UserIcon>CV</UserIcon>
+        <Hamburger onClick={() => setSidebarOpen(!sidebarOpen)} />
       </Nav>
     </HeaderContainer>
   );
@@ -37,6 +50,9 @@ const HeaderContainer = styled.header`
   padding: 0.5rem 1rem;
   background-color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  width  : 100%;
+  position : fixed;
+  z-index : 10;
 `;
 
 const LogoContainer = styled.div`
@@ -72,6 +88,9 @@ const Status = styled.div`
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 14px;
+   @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const StatusDot = styled.div`
@@ -88,6 +107,9 @@ const HelpButton = styled.button`
   border-radius: 12px;
   font-size: 14px;
   cursor: pointer;
+     @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const UserIcon = styled.div`

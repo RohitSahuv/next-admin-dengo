@@ -1,16 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header";
 import Nav from "./Nav";
 
 export default function Layout({ children }) {
-  const [showNav, setShowNav] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
+    };
+
+    handleResize(); // Set initial sidebar state
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   return (
-    <div className="bg-bgGray min-h-screen" >
-      <Header />
+    <div className="bg-bgGray" >
+      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div className="flex">
-        <Nav show={showNav} />
-        <div className="flex-grow p-4">
+        <Nav sidebarOpen={sidebarOpen} />
+        <div className="flex-grow p-4 mt-8 w-full">
           {children}
         </div>
       </div>

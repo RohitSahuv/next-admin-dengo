@@ -7,16 +7,8 @@ import { FaUserPlus } from "react-icons/fa";
 import { CustomTable } from '@/components/Table';
 import Modal from 'react-modal';
 import EntryForm from '@/components/EntryForm';
+import { BiMenuAltRight } from "react-icons/bi";
 
-
-
-const StatusBadge = styled.span`
-  background-color: ${(props) => (props.active ? '#d1ffd6' : '#ffd1d1')};
-  color: ${(props) => (props.active ? '#30a14e' : '#a13030')};
-  padding: 5px 10px;
-  border-radius: 10px;
-  font-size: 14px;
-`;
 let initialValues = {
     name: '',
     status: 'Active',
@@ -185,8 +177,14 @@ export default function PeoplePage() {
                         </div>
 
                         <Box>
-                            <SearchInput placeholder="Search by name or email" value={searchTerm}
-                                onChange={handleSearch} />
+                            <Flex>
+                                <SearchInput placeholder="Search by name or email" value={searchTerm}
+                                    onChange={handleSearch} />
+                                <RightButton>
+                                    <BiMenuAltRight fontSize={"1rem"} />
+                                </RightButton>
+                            </Flex>
+
                             <ButtonGroup>
                                 <ActionButton onClick={handleExport}>
                                     <FaCloudUploadAlt fontSize={"1rem"} /> Export
@@ -231,6 +229,12 @@ const customStyles = {
     },
 };
 
+const Flex = styled.div`
+ display : flex;
+ width : 100%;
+ justify-content : space-between;
+`
+
 
 const CustomModalContent = styled.div`
   &.ReactModal__Content {
@@ -252,9 +256,12 @@ const CustomModalContent = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 27px;
-  max-width: 100%;
-  margin: 0 auto;
+  padding: 1.5rem;
+  width: 100%;
+  margin: 1rem auto;
+ @media (max-width: 768px) {
+  padding: 0.5rem;
+  }
 `;
 
 const Header = styled.h1`
@@ -267,6 +274,7 @@ const Header = styled.h1`
 `;
 
 const Tabs = styled.div`
+  width : 100%;
   display: flex;
   border-bottom: 5px solid #ddd;
 `;
@@ -287,13 +295,18 @@ const ActionBar = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  height: 50px;
   margin-bottom: 20px;
   padding: 10px 0;
   &.div {
     width: 100%;
     display: flex;
     tex-wrap: nowrap;
+  }
+
+ @media (max-width: 768px) {
+  width  : 100%;
+  display: flex;
+  justify-content: flex-start;
   }
 `;
 
@@ -303,26 +316,34 @@ const Box = styled.div`
     align-items: center;
     justify-content: center;
     align-content: center;
+    @media (max-width: 768px) {
+    width : 100%;
+    flex-direction: column;
+  }
 `;
 
 const SearchInput = styled.input`
-  width: 200px;
+  width: 300px;
    padding: 7px 10px 7px 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
   font-size: 12px;
-     font-weight: medium;
+  font-weight: medium;
+        @media (min-width: 768px) {
+          width  : 100%;
+      }
 `;
 
 const ButtonGroup = styled.div`
+  width  : 100%;
   display: flex;
   gap: 10px;
 `;
 
-const ActionButton = styled.button`
-display: flex;
-  padding: 7px 10px 7px 10px;
-  gap: 5px;
+const RightButton = styled.button`
+  display: flex;
+  width : fit-content;
+  padding : 10px;
   border-radius: 3px 0px 0px 0px;
   opacity: 0px;
    font-size: 12px;
@@ -335,6 +356,41 @@ display: flex;
  border: none;
   &:hover {
     background-color: ${(props) => (props.primary ? '#333' : '#f5f5f5')};
+  }
+
+      @media (min-width: 768px) {
+          display: none;
+      }
+`;
+
+const ActionButton = styled.button`
+display: flex;
+  padding: 7px 10px 7px 10px;
+  gap: 5px;
+  width: fit-content;
+  border-radius: 3px 0px 0px 0px;
+  opacity: 0px;
+   font-size: 12px;
+   font-weight: medium;
+   justify-content: center;
+   align-items: center;
+  border: ${(props) => (props.primary ? 'none' : '1px solid #000')};
+  background-color: ${(props) => (props.primary ? '#000' : '#F0F0F0')};
+  color: ${(props) => (props.primary ? '#fff' : '#000')};
+ border: none;
+  &:hover {
+    background-color: ${(props) => (props.primary ? '#333' : '#f5f5f5')};
+  }
+
+     @media (max-width: 768px) {
+         width : 100%;
+      }
+
+
+  &:last-child {
+      @media (max-width: 768px) {
+          display: none;
+      }
   }
 `;
 
@@ -351,4 +407,7 @@ const Tab = styled.button`
   color: ${(props) => (props.active ? '#fff' : '#000')};
   border: none;
   cursor: pointer;
+     @media (max-width: 768px) {
+    display: none;
+  }
 `;

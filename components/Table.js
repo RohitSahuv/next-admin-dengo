@@ -6,13 +6,18 @@ const TableContainer = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   width: 100%;
+  overflow-x: auto;
+  max-height : 50vh;
+  overflow-y : scroll;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  max-height : 20vh;
-  overflow-y : scroll;
+  &:thead>tr{
+    width: 100%;
+    position: fixed;
+  }
 `;
 
 const TableHeader = styled.th`
@@ -21,6 +26,7 @@ const TableHeader = styled.th`
   text-align: left;
   font-weight: bold;
   border-bottom: 1px solid #ddd;
+
 `;
 
 const TableRow = styled.tr`
@@ -88,7 +94,7 @@ export const CustomTable = ({ columns, data, onSelectRow, customRender }) => {
                                 </TableHeader>
                             </>
                         ))}
-                        <TableHeader>Action</TableHeader>
+                        <TableHeader data-label="Action">Action</TableHeader>
                     </tr>
                 </thead>
                 <Tbody>
