@@ -2,7 +2,7 @@ import formidable from 'formidable';
 import fs from 'fs';
 import csvParser from 'csv-parser';
 import { mongooseConnect } from '@/lib/mongoose';
-import People from '@/models/People';
+import People from '@/models/Invoice';
 
 export const config = {
     api: {
@@ -55,7 +55,6 @@ export default async function handler(req, res) {
                     }
                 })
                 .on('error', (err) => {
-                    console.log(err);
                     res.status(500).json({ message: 'Error reading or parsing CSV' });
                 });
         });

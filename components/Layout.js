@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Header from "./Header";
+
 import Nav from "./Nav";
 
 export default function Layout({ children }) {
@@ -14,22 +14,16 @@ export default function Layout({ children }) {
       }
     };
 
-    handleResize(); // Set initial sidebar state
+    handleResize(); 
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   return (
-    <div className="bg-bgGray" >
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <div className="flex">
-        <Nav sidebarOpen={sidebarOpen} />
-        <div className="flex-grow p-4 mt-8 w-full">
-          {children}
-        </div>
-      </div>
+    <div className="bg-bgGray, flex">
+      <Nav sidebarOpen={sidebarOpen} />
+      <div className="flex-grow    w-full">{children}</div>
     </div>
   );
 }

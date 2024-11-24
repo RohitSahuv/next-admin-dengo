@@ -1,6 +1,6 @@
 import { parse } from 'json2csv';
 import { mongooseConnect } from '@/lib/mongoose';
-import People from '@/models/People';
+import People from '@/models/Invoice';
 
 export default async function handler(req, res) {
     if (req.method === 'GET') {

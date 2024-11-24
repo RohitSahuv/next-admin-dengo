@@ -5,20 +5,22 @@ import styled from 'styled-components';
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
-    phone: Yup.string().required('Phone is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    property: Yup.string().required('Property is required'),
-    unit: Yup.string(),
+    vendorName: Yup.string().required('Vendor Name is required'),
+    invoice: Yup.string().required('Invoice is required'),
+    netAmount: Yup.number().required('Net Amount is required').positive('Net Amount must be positive'),
+    invoiceDate: Yup.date().required('Invoice Date is required'),
+    dueDate: Yup.date().required('Due Date is required'),
+    department: Yup.string(),
+    costCenter: Yup.string(),
+    status: Yup.string().required('Status is required'),
 });
 
-const EntryForm = ({ fetchPeopleData, onRequestClose, initialValues }) => {
-
+const EntryForm = ({ fetchInvoices, onRequestClose, initialValues }) => {
 
     const handleFormSubmit = (formData, isEditMode) => {
         if (isEditMode) {
             updateData(formData);
+
         } else {
             createNewData(formData);
         }
@@ -26,7 +28,7 @@ const EntryForm = ({ fetchPeopleData, onRequestClose, initialValues }) => {
 
 
     const updateData = async (formData) => {
-        console.log(formData, "Success");
+        console.log('formData', formData)
         try {
             const response = await fetch('/api/submitForm', {
                 method: 'POST',
@@ -40,8 +42,7 @@ const EntryForm = ({ fetchPeopleData, onRequestClose, initialValues }) => {
                 throw new Error('Failed to submit form');
             }
 
-            const data = await response.json();
-            fetchPeopleData()
+            fetchInvoices()
             onRequestClose();
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -65,14 +66,12 @@ const EntryForm = ({ fetchPeopleData, onRequestClose, initialValues }) => {
             }
 
             const data = await response.json();
-            fetchPeopleData()
+            fetchInvoices()
             onRequestClose();
         } catch (error) {
             console.error('Error submitting form:', error);
         }
     };
-
-    console.log(initialValues, "Success");
 
     return (
         <Box>
@@ -82,63 +81,136 @@ const EntryForm = ({ fetchPeopleData, onRequestClose, initialValues }) => {
                 onSubmit={async (values, { setSubmitting }) => {
                     setSubmitting(true);
                     try {
-                        await handleFormSubmit(values, initialValues._id);
+                        await handleFormSubmit(values, Boolean(initialValues._id));
                     } finally {
                         setSubmitting(false);
                     }
                 }}
             >
-                {({ isSubmitting }) => (
+                {({ isSubmitting, handleChange, values }) => (
                     <StyledForm>
                         <HeaderText>
-                            {
-                                initialValues._id ? 'Edit' : 'Create'
-                            }
+                            {initialValues._id ? 'Edit' : 'Create'}
                         </HeaderText>
                         <FormField>
-                            <label htmlFor="firstName">First Name</label>
-                            <StyledField name="firstName" type="text" />
-                            <ErrorMessage name="firstName" component="ErrorText" />
+                            <label htmlFor="vendorName">Vendor Name</label>
+                            <StyledField
+                                name="vendorName"
+                                type="text"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.vendorName}
+                            />
+                            <ErrorMessage name="vendorName" component="ErrorText" />
                         </FormField>
 
                         <FormField>
-                            <label htmlFor="lastName">Last Name</label>
-                            <StyledField name="lastName" type="text" />
-                            <ErrorMessage name="lastName" component="ErrorText" />
+                            <label htmlFor="invoice">Invoice</label>
+                            <StyledField
+                                name="invoice"
+                                type="text"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.invoice}
+                            />
+                            <ErrorMessage name="invoice" component="ErrorText" />
                         </FormField>
 
                         <FormField>
-                            <label htmlFor="phone">Phone</label>
-                            <StyledField name="phone" type="text" />
-                            <ErrorMessage name="phone" component="ErrorText" />
+                            <label htmlFor="netAmount">Net Amount</label>
+                            <StyledField
+                                name="netAmount"
+                                type="number"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.netAmount}
+                            />
+                            <ErrorMessage name="netAmount" component="ErrorText" />
                         </FormField>
 
                         <FormField>
-                            <label htmlFor="email">Email</label>
-                            <StyledField name="email" type="email" />
-                            <ErrorMessage name="email" component="ErrorText" />
+                            <label htmlFor="invoiceDate">Invoice Date</label>
+                            <StyledField
+                                name="invoiceDate"
+                                type="date"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.invoiceDate}
+                            />
+                            <ErrorMessage name="invoiceDate" component="ErrorText" />
                         </FormField>
 
                         <FormField>
-                            <label htmlFor="property">Property</label>
-                            <Field as="select" name="property">
-                                <option value="">Select Property</option>
-                                <option value="ABC">ABC</option>
-                                <option value="PQR">PQR</option>
-                                <option value="XYZ">XYZ</option>
+                            <label htmlFor="dueDate">Due Date</label>
+                            <StyledField
+                                name="dueDate"
+                                type="date"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.dueDate}
+                            />
+                            <ErrorMessage name="dueDate" component="ErrorText" />
+                        </FormField>
+
+                        <FormField>
+                            <label htmlFor="department">Department</label>
+                            <StyledField
+                                name="department"
+                                type="text"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.department}
+                            />
+                            <ErrorMessage name="department" component="ErrorText" />
+                        </FormField>
+
+                        <FormField>
+                            <label htmlFor="costCenter">Cost Center</label>
+                            <StyledField
+                                name="costCenter"
+                                type="text"
+                                as={Field}
+                                onChange={handleChange}
+                                value={values.costCenter}
+                            />
+                            <ErrorMessage name="costCenter" component="ErrorText" />
+                        </FormField>
+
+                        <FormField>
+                            <label htmlFor="status">Status</label>
+                            <Field
+                                as="select"
+                                name="status"
+                                onChange={handleChange}
+                                value={values.status}
+                            >
+                                <option value="">Select Status</option>
+                                {[
+                                    'Open',
+                                    'Awaiting Approval',
+                                    'Approved',
+                                    'Processing',
+                                    'Paid',
+                                    'Rejected',
+                                    'Vendor Not Found',
+                                    'Duplicate',
+                                    'Void',
+                                ].map((status) => (
+                                    <option key={status} value={status}>
+                                        {status}
+                                    </option>
+                                ))}
                             </Field>
-                            <ErrorMessage name="property" component="ErrorText" />
-                        </FormField>
-                        <FormField>
-                            <label htmlFor="unit">Unit</label>
-                            <StyledField name="unit" type="text" />
+                            <ErrorMessage name="status" component="ErrorText" />
                         </FormField>
 
                         <ButtonContainer>
+                            <CancelButton type="button" onClick={onRequestClose}>
+                                Cancel
+                            </CancelButton>
                             <StyledButton type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? 'Saving...' : 'Save'}
                             </StyledButton>
-                            <CancelButton type="button" onClick={onRequestClose}>Cancel</CancelButton>
                         </ButtonContainer>
                     </StyledForm>
                 )}
@@ -150,6 +222,7 @@ const EntryForm = ({ fetchPeopleData, onRequestClose, initialValues }) => {
 const Box = styled.div`
 width: 100%;
 height: 100%;
+position: relative;
 `
 
 // Styled Components for form and elements
@@ -162,13 +235,16 @@ const StyledForm = styled(Form)`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
+  padding-top: 8px;
+  position: fixed;
+  right: 0%;
 `;
 
 const FormField = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2px;
+
   label {
     font-size: 13px;
     font-weight: 600;
@@ -179,7 +255,7 @@ const FormField = styled.div`
 `;
 
 const StyledField = styled(Field)`
-  padding: 5px;
+  padding: 2px;
   font-size: 13px;
   height: 2rem;
   border: 1px solid #ccc;
@@ -191,15 +267,9 @@ const StyledField = styled(Field)`
   }
 `;
 
-const StyledSelect = styled(StyledField)`
-  appearance: none;
-  background-color: white;
-`;
-
 const ButtonContainer = styled.div`
   width : 100%;
   display: flex;
-  flex-direction: column;
   gap: 15px;
   justify-content: center;
   align-items: center;
@@ -209,7 +279,7 @@ export const StyledButton = styled.button`
 gap: 15px;
 border-radius: 3px 0px 0px 0px;
 padding: 7px 14px 7px 14px;
-  width: 100%;
+  width: fit-content;
   background-color: black;
   color: white;
   gap : 0.5rem;
